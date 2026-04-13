@@ -281,7 +281,7 @@ nav.scrolled {
 /* ═══════════════════════════════════════
    SECTION COMMONS
    ═══════════════════════════════════════ */
-section { padding: 6rem 3rem; transition: background var(--transition-theme); }
+section { padding: 4rem 3rem; transition: background var(--transition-theme); }
 .section-label {
   font-family: 'Cormorant Garamond', serif;
   font-size: 0.72rem; color: var(--accent);
@@ -304,7 +304,7 @@ section { padding: 6rem 3rem; transition: background var(--transition-theme); }
 .divider {
   width: 40px; height: 1px;
   background: var(--border);
-  margin: 1.5rem auto;
+  margin: 1rem auto;
   transition: background var(--transition-theme);
 }
 
@@ -312,7 +312,7 @@ section { padding: 6rem 3rem; transition: background var(--transition-theme); }
    PRODUCTS
    ═══════════════════════════════════════ */
 .products { background: var(--bg-deep); }
-.products-header { text-align: center; margin-bottom: 4rem; }
+.products-header { text-align: center; margin-bottom: 2.5rem; }
 .products-header .section-desc { margin: 0.5rem auto 0; }
 
 .product-grid {
@@ -366,7 +366,7 @@ section { padding: 6rem 3rem; transition: background var(--transition-theme); }
   font-size: clamp(1.3rem, 2.5vw, 1.8rem);
   font-weight: 300; font-style: italic;
   color: var(--text-heading);
-  line-height: 1.8; margin: 2rem 0;
+  line-height: 1.8; margin: 1.5rem 0;
   transition: color var(--transition-theme);
 }
 .story-body {
@@ -380,7 +380,7 @@ section { padding: 6rem 3rem; transition: background var(--transition-theme); }
 .features { background: var(--bg-deep); }
 .feature-grid {
   display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 2.5rem; max-width: 900px; margin: 3rem auto 0;
+  gap: 2rem; max-width: 900px; margin: 2rem auto 0;
   text-align: center;
 }
 .feature-item h3 {
@@ -431,7 +431,7 @@ section { padding: 6rem 3rem; transition: background var(--transition-theme); }
    ═══════════════════════════════════════ */
 .contact { background: var(--bg-deep); }
 .contact-layout {
-  max-width: 800px; margin: 3rem auto 0;
+  max-width: 800px; margin: 2rem auto 0;
   display: grid; grid-template-columns: 1fr 1fr; gap: 3rem;
 }
 .contact-info h3 {
@@ -760,7 +760,7 @@ footer p {
       <p>감성 메모리 카드 브랜드.<br>순간을 기억하는 가장 아름다운 방법.</p>
       <div class="contact-detail">
         <div class="icon">✉</div>
-        <span>muren1@naver.com</span>
+        <span><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="44293136212a75042a253221366a272b29">[email&#160;protected]</a></span>
       </div>
       <div class="contact-detail">
         <div class="icon">📷</div>
@@ -768,7 +768,7 @@ footer p {
       </div>
       <div class="contact-detail">
         <div class="icon">⏰</div>
-        <span>평일 10:00 – 17:00</span>
+        <span>평일 10:00 – 18:00</span>
       </div>
     </div>
     <form class="contact-form reveal" onsubmit="handleSubmit(event)">
@@ -801,16 +801,21 @@ function toggleTheme() {
   body.setAttribute('data-theme', current === 'pink' ? 'black' : 'pink');
 }
 
-// Scroll reveal
-const observer = new IntersectionObserver((entries) => {
-  entries.forEach(e => {
-    if (e.isIntersecting) {
-      e.target.classList.add('visible');
-      observer.unobserve(e.target);
-    }
-  });
-}, { threshold: 0.15 });
-document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+// Scroll reveal — threshold를 낮추고 폴백 추가
+if ('IntersectionObserver' in window) {
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+        observer.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.05, rootMargin: '0px 0px -30px 0px' });
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+} else {
+  // 폴백: IntersectionObserver 미지원 시 전부 보이기
+  document.querySelectorAll('.reveal').forEach(el => el.classList.add('visible'));
+}
 
 // Nav scroll
 window.addEventListener('scroll', () => {
@@ -818,4 +823,10 @@ window.addEventListener('scroll', () => {
 });
 
 // Form
-function handleSubm
+function handleSubmit(e) {
+  e.preventDefault();
+  const btn = e.target.querySelector('button');
+  btn.textContent = '✓ 접수 완료';
+  setTimeout(() => { btn.textContent = '보내기 →'; e.target.reset(); }, 2000);
+}
+</script>
