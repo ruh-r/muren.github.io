@@ -1,0 +1,874 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MÜREN film — Capture Your Moment</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Noto+Sans+KR:wght@300;400;500;600&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+/* ═══════════════════════════════════════
+   THEME SYSTEM — PINK (light) & BLACK (dark)
+   ═══════════════════════════════════════ */
+:root {
+  --transition-theme: 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+[data-theme="pink"] {
+  --bg: #f5e6e0;
+  --bg-deep: #eddad3;
+  --surface: #f0d4cb;
+  --surface-soft: #f8ece7;
+  --card-bg: #fff5f2;
+  --border: #e0bfb5;
+  --border-light: #ecd5cd;
+  --text: #5c3a4a;
+  --text-heading: #4a2838;
+  --text-muted: #9a7280;
+  --text-faint: #c09aa8;
+  --accent: #8b4a60;
+  --accent-soft: #c08898;
+  --tag-bg: #f0d4cb;
+  --tag-border: #e0bfb5;
+  --tag-text: #8b4a60;
+  --btn-primary-bg: #5c3a4a;
+  --btn-primary-text: #f5e6e0;
+  --btn-secondary-bg: transparent;
+  --btn-secondary-border: #c09aa8;
+  --btn-secondary-text: #5c3a4a;
+  --input-bg: #fff5f2;
+  --input-border: #e0bfb5;
+  --toggle-track: #e0bfb5;
+  --toggle-knob: #5c3a4a;
+  --toggle-icon: "☀";
+  --grain-opacity: 0.12;
+  --naver-bg: #03c75a;
+  --footer-text: #9a7280;
+  --sd-card-bg: #f5e6e0;
+  --sd-card-inner: #f0d4cb;
+  --sd-card-text: #5c3a4a;
+  --sd-card-accent: #f8ece7;
+  --sd-lock: #e0bfb5;
+  --dot-active: #5c3a4a;
+  --dot-inactive: #d4b0a5;
+}
+
+[data-theme="black"] {
+  --bg: #1a1618;
+  --bg-deep: #13100f;
+  --surface: #242020;
+  --surface-soft: #1e1a1c;
+  --card-bg: #2a2426;
+  --border: #3a3234;
+  --border-light: #322a2e;
+  --text: #e8ddd5;
+  --text-heading: #f0e8e2;
+  --text-muted: #9a8a82;
+  --text-faint: #6a5a55;
+  --accent: #d4a090;
+  --accent-soft: #a07868;
+  --tag-bg: #2a2426;
+  --tag-border: #3a3234;
+  --tag-text: #d4a090;
+  --btn-primary-bg: #e8ddd5;
+  --btn-primary-text: #1a1618;
+  --btn-secondary-bg: transparent;
+  --btn-secondary-border: #6a5a55;
+  --btn-secondary-text: #e8ddd5;
+  --input-bg: #242020;
+  --input-border: #3a3234;
+  --toggle-track: #3a3234;
+  --toggle-knob: #e8ddd5;
+  --toggle-icon: "☾";
+  --grain-opacity: 0.06;
+  --naver-bg: #03c75a;
+  --footer-text: #6a5a55;
+  --sd-card-bg: #1a1618;
+  --sd-card-inner: #242020;
+  --sd-card-text: #e8ddd5;
+  --sd-card-accent: #2a2426;
+  --sd-lock: #3a3234;
+  --dot-active: #e8ddd5;
+  --dot-inactive: #4a4042;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Noto Sans KR', sans-serif;
+  overflow-x: hidden;
+  line-height: 1.7;
+  transition: background var(--transition-theme), color var(--transition-theme);
+}
+
+/* Film grain overlay */
+body::after {
+  content: '';
+  position: fixed; inset: 0; z-index: 9999;
+  pointer-events: none;
+  opacity: var(--grain-opacity);
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+  transition: opacity var(--transition-theme);
+}
+
+::selection { background: var(--accent); color: var(--bg); }
+
+.serif { font-family: 'Cormorant Garamond', 'Libre Baskerville', serif; }
+
+/* ═══════════════════════════════════════
+   THEME TOGGLE
+   ═══════════════════════════════════════ */
+.theme-toggle {
+  position: fixed; top: 1.5rem; right: 1.5rem; z-index: 200;
+  width: 56px; height: 30px; border-radius: 100px;
+  background: var(--toggle-track); border: 1px solid var(--border);
+  cursor: pointer; transition: all var(--transition-theme);
+  display: flex; align-items: center; padding: 3px;
+}
+.theme-toggle .knob {
+  width: 22px; height: 22px; border-radius: 50%;
+  background: var(--toggle-knob);
+  transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 11px;
+}
+[data-theme="black"] .theme-toggle .knob {
+  transform: translateX(26px);
+}
+
+/* ═══════════════════════════════════════
+   NAV
+   ═══════════════════════════════════════ */
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  padding: 1.2rem 3rem;
+  display: flex; justify-content: space-between; align-items: center;
+  background: transparent;
+  transition: all 0.4s;
+}
+nav.scrolled {
+  background: color-mix(in srgb, var(--bg) 90%, transparent);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border-light);
+}
+.nav-logo {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.5rem; font-weight: 400;
+  color: var(--text-heading);
+  text-decoration: none; letter-spacing: 6px;
+  text-transform: uppercase;
+  transition: color var(--transition-theme);
+}
+.nav-logo em {
+  font-style: italic; letter-spacing: 4px;
+  font-size: 0.65em; color: var(--text-muted);
+  display: block; text-align: center; margin-top: -2px;
+  letter-spacing: 8px;
+}
+.nav-links { display: flex; gap: 2.5rem; align-items: center; }
+.nav-links a {
+  color: var(--text-muted); text-decoration: none;
+  font-size: 0.78rem; font-weight: 400;
+  letter-spacing: 2px; text-transform: uppercase;
+  transition: color 0.3s;
+}
+.nav-links a:hover { color: var(--text-heading); }
+.nav-cta-link {
+  padding: 0.45rem 1.2rem !important;
+  border: 1px solid var(--accent-soft) !important;
+  border-radius: 100px;
+  color: var(--accent) !important;
+}
+.nav-cta-link:hover { background: var(--accent); color: var(--bg) !important; }
+.hamburger { display: none; cursor: pointer; flex-direction: column; gap: 5px; }
+.hamburger span { width: 22px; height: 1.5px; background: var(--text); transition: 0.3s; }
+
+/* ═══════════════════════════════════════
+   HERO
+   ═══════════════════════════════════════ */
+.hero {
+  min-height: 100vh;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  text-align: center;
+  padding: 8rem 2rem 4rem;
+  position: relative;
+}
+.hero-decorative-line {
+  width: 1px; height: 60px;
+  background: linear-gradient(to bottom, transparent, var(--border), transparent);
+  margin-bottom: 2.5rem;
+  animation: fadeIn 1s ease-out 0.2s both;
+}
+.hero-brand {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(3.5rem, 8vw, 7rem);
+  font-weight: 300; letter-spacing: 14px;
+  color: var(--text-heading);
+  text-transform: uppercase;
+  animation: fadeIn 1s ease-out 0.3s both;
+  transition: color var(--transition-theme);
+}
+.hero-sub {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(1rem, 2vw, 1.3rem);
+  font-weight: 300; font-style: italic;
+  color: var(--text-muted);
+  letter-spacing: 6px; margin-top: 0.5rem;
+  animation: fadeIn 1s ease-out 0.5s both;
+  transition: color var(--transition-theme);
+}
+
+/* SD Card illustration */
+.hero-card-wrapper {
+  margin: 3.5rem 0 3rem;
+  animation: fadeSlideUp 1s ease-out 0.6s both;
+}
+.sd-card-visual {
+  width: 180px; height: 220px;
+  background: var(--sd-card-bg);
+  border: 1.5px solid var(--border);
+  border-radius: 12px 12px 12px 3px;
+  position: relative;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  transition: all var(--transition-theme);
+  box-shadow: 0 20px 60px color-mix(in srgb, var(--text) 8%, transparent);
+}
+.sd-card-visual .lock {
+  position: absolute; left: -10px; top: 30px;
+  width: 8px; height: 30px; border-radius: 2px;
+  background: var(--sd-lock);
+  transition: background var(--transition-theme);
+}
+.sd-card-visual .lock-label {
+  position: absolute; left: -10px; top: 22px;
+  font-size: 5px; color: var(--text-faint);
+  letter-spacing: 1px; text-transform: uppercase;
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+}
+.sd-card-visual .notch {
+  position: absolute; top: -1.5px; right: 20px;
+  width: 12px; height: 8px;
+  background: var(--sd-card-text);
+  border-radius: 0 0 3px 3px;
+  opacity: 0.2;
+}
+.sd-card-inner {
+  width: 140px; padding: 1rem 0.8rem;
+  background: var(--sd-card-inner);
+  border-radius: 8px; text-align: center;
+  border: 1px solid var(--border-light);
+  transition: all var(--transition-theme);
+}
+.sd-brand-name {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.1rem; font-weight: 400;
+  letter-spacing: 5px; color: var(--sd-card-text);
+  background: var(--sd-card-accent);
+  padding: 0.2rem 0; border-radius: 4px;
+  transition: all var(--transition-theme);
+}
+.sd-brand-sub {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 0.55rem; letter-spacing: 4px;
+  color: var(--text-muted); margin-top: 1px;
+}
+.sd-capacity {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 2.2rem; font-weight: 300;
+  color: var(--sd-card-text); margin: 0.5rem 0 0;
+  line-height: 1;
+  transition: color var(--transition-theme);
+}
+.sd-capacity-unit {
+  font-size: 0.65rem; letter-spacing: 3px;
+  color: var(--text-muted); display: block;
+}
+.sd-type-label {
+  font-size: 0.5rem; letter-spacing: 3px;
+  color: var(--text-muted); margin-top: 0.5rem;
+  text-transform: uppercase;
+  padding: 0.15rem 0.5rem;
+  background: var(--sd-card-accent);
+  border-radius: 3px; display: inline-block;
+}
+.sd-tags {
+  display: flex; gap: 0.4rem; justify-content: center;
+  margin-top: 0.6rem;
+}
+.sd-tag {
+  font-size: 0.55rem; padding: 0.15rem 0.5rem;
+  border: 1px solid var(--border);
+  border-radius: 100px; color: var(--text-muted);
+  letter-spacing: 1px;
+  transition: all var(--transition-theme);
+}
+.sd-dots {
+  display: flex; gap: 5px; justify-content: center;
+  margin-top: 0.8rem;
+}
+.sd-dots span {
+  width: 4px; height: 4px; border-radius: 50%;
+  background: var(--dot-inactive);
+  transition: background var(--transition-theme);
+}
+.sd-dots span:first-child { background: var(--dot-active); }
+.sd-slogan {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 0.5rem; letter-spacing: 4px;
+  color: var(--text-faint); margin-top: 1rem;
+  text-transform: uppercase;
+}
+
+.hero-tagline {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(1.05rem, 2vw, 1.25rem);
+  font-weight: 300; font-style: italic;
+  color: var(--text-muted);
+  max-width: 420px; line-height: 1.8;
+  animation: fadeIn 1s ease-out 0.8s both;
+}
+.hero-cta {
+  display: flex; gap: 1rem; margin-top: 2.5rem; flex-wrap: wrap;
+  justify-content: center;
+  animation: fadeIn 1s ease-out 1s both;
+}
+
+/* Buttons */
+.btn-primary {
+  display: inline-flex; align-items: center; gap: 0.5rem;
+  padding: 0.85rem 2.2rem; border-radius: 100px;
+  background: var(--btn-primary-bg); color: var(--btn-primary-text);
+  font-size: 0.82rem; font-weight: 500; letter-spacing: 1.5px;
+  text-decoration: none; border: none; cursor: pointer;
+  text-transform: uppercase;
+  transition: all 0.4s;
+}
+.btn-primary:hover { transform: translateY(-2px); opacity: 0.88; }
+.btn-secondary {
+  display: inline-flex; align-items: center; gap: 0.5rem;
+  padding: 0.85rem 2.2rem; border-radius: 100px;
+  background: var(--btn-secondary-bg); color: var(--btn-secondary-text);
+  font-size: 0.82rem; font-weight: 400; letter-spacing: 1.5px;
+  text-decoration: none; cursor: pointer;
+  border: 1px solid var(--btn-secondary-border);
+  text-transform: uppercase;
+  transition: all 0.4s;
+}
+.btn-secondary:hover { border-color: var(--text); }
+
+/* ═══════════════════════════════════════
+   SECTION COMMONS
+   ═══════════════════════════════════════ */
+section { padding: 6rem 3rem; transition: background var(--transition-theme); }
+.section-label {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 0.72rem; color: var(--accent);
+  letter-spacing: 5px; text-transform: uppercase;
+  font-style: italic; margin-bottom: 0.8rem;
+  transition: color var(--transition-theme);
+}
+.section-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(1.8rem, 3.5vw, 2.6rem);
+  font-weight: 300; color: var(--text-heading);
+  letter-spacing: 2px;
+  transition: color var(--transition-theme);
+}
+.section-desc {
+  color: var(--text-muted); max-width: 500px;
+  font-weight: 300; font-size: 0.92rem;
+  transition: color var(--transition-theme);
+}
+.divider {
+  width: 40px; height: 1px;
+  background: var(--border);
+  margin: 1.5rem auto;
+  transition: background var(--transition-theme);
+}
+
+/* ═══════════════════════════════════════
+   PRODUCTS
+   ═══════════════════════════════════════ */
+.products { background: var(--bg-deep); }
+.products-header { text-align: center; margin-bottom: 4rem; }
+.products-header .section-desc { margin: 0.5rem auto 0; }
+
+.product-grid {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem; max-width: 960px; margin: 0 auto;
+}
+.product-card {
+  background: var(--card-bg);
+  border: 1px solid var(--border-light);
+  border-radius: 16px; padding: 2.2rem 1.8rem;
+  transition: all 0.4s;
+  text-align: center;
+}
+.product-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 16px 48px color-mix(in srgb, var(--text) 6%, transparent);
+}
+.product-emoji { font-size: 2rem; margin-bottom: 1rem; }
+.product-card h3 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.2rem; font-weight: 400;
+  letter-spacing: 2px; color: var(--text-heading);
+  margin-bottom: 0.6rem;
+  transition: color var(--transition-theme);
+}
+.product-card p {
+  color: var(--text-muted); font-size: 0.85rem;
+  font-weight: 300; line-height: 1.7;
+}
+.product-specs {
+  margin-top: 1rem; display: flex; flex-wrap: wrap; gap: 0.4rem;
+  justify-content: center;
+}
+.spec-tag {
+  padding: 0.25rem 0.65rem; border-radius: 100px;
+  background: var(--tag-bg); border: 1px solid var(--tag-border);
+  font-size: 0.68rem; color: var(--tag-text);
+  letter-spacing: 1px;
+  transition: all var(--transition-theme);
+}
+
+/* ═══════════════════════════════════════
+   STORY / ABOUT
+   ═══════════════════════════════════════ */
+.story { background: var(--bg); }
+.story-content {
+  max-width: 640px; margin: 0 auto; text-align: center;
+}
+.story-quote {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(1.3rem, 2.5vw, 1.8rem);
+  font-weight: 300; font-style: italic;
+  color: var(--text-heading);
+  line-height: 1.8; margin: 2rem 0;
+  transition: color var(--transition-theme);
+}
+.story-body {
+  color: var(--text-muted); font-size: 0.9rem;
+  font-weight: 300; line-height: 2;
+}
+
+/* ═══════════════════════════════════════
+   FEATURES
+   ═══════════════════════════════════════ */
+.features { background: var(--bg-deep); }
+.feature-grid {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 2.5rem; max-width: 900px; margin: 3rem auto 0;
+  text-align: center;
+}
+.feature-item h3 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.05rem; font-weight: 400;
+  color: var(--text-heading); letter-spacing: 1px;
+  margin: 0.6rem 0 0.4rem;
+  transition: color var(--transition-theme);
+}
+.feature-icon {
+  font-size: 1.6rem; margin-bottom: 0.2rem;
+}
+.feature-item p {
+  color: var(--text-muted); font-size: 0.82rem;
+  font-weight: 300; line-height: 1.7;
+}
+
+/* ═══════════════════════════════════════
+   PURCHASE
+   ═══════════════════════════════════════ */
+.purchase {
+  background: var(--bg);
+  text-align: center;
+}
+.purchase .section-desc { margin: 0.5rem auto 2.5rem; }
+.store-buttons { display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap; }
+.store-btn {
+  display: inline-flex; align-items: center; gap: 0.7rem;
+  padding: 0.9rem 2rem; border-radius: 100px;
+  font-weight: 500; font-size: 0.88rem;
+  text-decoration: none; letter-spacing: 0.5px;
+  transition: all 0.3s; min-width: 190px; justify-content: center;
+}
+.store-naver { background: var(--naver-bg); color: #fff; }
+.store-naver:hover { transform: translateY(-2px); box-shadow: 0 8px 30px #03c75a33; }
+.store-coupang {
+  background: var(--surface); color: var(--text-muted);
+  border: 1px solid var(--border);
+  opacity: 0.6; cursor: default;
+}
+.store-coupang .badge {
+  font-size: 0.6rem; letter-spacing: 1px;
+  text-transform: uppercase; opacity: 0.7;
+}
+
+/* ═══════════════════════════════════════
+   CONTACT
+   ═══════════════════════════════════════ */
+.contact { background: var(--bg-deep); }
+.contact-layout {
+  max-width: 800px; margin: 3rem auto 0;
+  display: grid; grid-template-columns: 1fr 1fr; gap: 3rem;
+}
+.contact-info h3 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.2rem; font-weight: 400;
+  color: var(--text-heading); letter-spacing: 2px;
+  margin-bottom: 1rem;
+}
+.contact-info p {
+  color: var(--text-muted); font-size: 0.85rem;
+  font-weight: 300; margin-bottom: 1.5rem; line-height: 1.8;
+}
+.contact-detail {
+  display: flex; align-items: center; gap: 0.8rem;
+  margin-bottom: 0.8rem; color: var(--text-muted);
+  font-size: 0.85rem; font-weight: 300;
+}
+.contact-detail .icon {
+  width: 32px; height: 32px; border-radius: 50%;
+  background: var(--surface); border: 1px solid var(--border-light);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.75rem;
+  transition: all var(--transition-theme);
+}
+.contact-form { display: flex; flex-direction: column; gap: 0.8rem; }
+.contact-form input,
+.contact-form textarea {
+  padding: 0.85rem 1.2rem; border-radius: 10px;
+  background: var(--input-bg); border: 1px solid var(--input-border);
+  color: var(--text); font-family: 'Noto Sans KR', sans-serif;
+  font-size: 0.85rem; font-weight: 300;
+  outline: none; transition: all 0.3s;
+}
+.contact-form input:focus,
+.contact-form textarea:focus { border-color: var(--accent); }
+.contact-form input::placeholder,
+.contact-form textarea::placeholder { color: var(--text-faint); }
+.contact-form textarea { resize: vertical; min-height: 110px; }
+.contact-form button {
+  padding: 0.85rem; border-radius: 100px;
+  background: var(--btn-primary-bg); color: var(--btn-primary-text);
+  font-weight: 500; font-size: 0.82rem;
+  letter-spacing: 1.5px; text-transform: uppercase;
+  border: none; cursor: pointer; transition: all 0.3s;
+}
+.contact-form button:hover { opacity: 0.88; }
+
+/* ═══════════════════════════════════════
+   FOOTER
+   ═══════════════════════════════════════ */
+footer {
+  padding: 3rem; text-align: center;
+  border-top: 1px solid var(--border-light);
+  transition: border-color var(--transition-theme);
+}
+.footer-logo {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.2rem; color: var(--text-heading);
+  letter-spacing: 8px; text-transform: uppercase;
+  margin-bottom: 0.5rem;
+  transition: color var(--transition-theme);
+}
+.footer-slogan {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 0.75rem; font-style: italic;
+  color: var(--text-faint); letter-spacing: 3px;
+  margin-bottom: 1rem;
+}
+footer p {
+  color: var(--footer-text); font-size: 0.72rem;
+  letter-spacing: 0.5px;
+  transition: color var(--transition-theme);
+}
+
+/* ═══════════════════════════════════════
+   ANIMATIONS
+   ═══════════════════════════════════════ */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes fadeSlideUp {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.reveal {
+  opacity: 0; transform: translateY(30px);
+  transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.reveal.visible { opacity: 1; transform: translateY(0); }
+
+/* ═══════════════════════════════════════
+   RESPONSIVE
+   ═══════════════════════════════════════ */
+@media (max-width: 768px) {
+  nav { padding: 1rem 1.5rem; }
+  .nav-links { display: none; }
+  .hamburger { display: flex; }
+  .nav-links.open {
+    display: flex; flex-direction: column;
+    position: absolute; top: 100%; left: 0; right: 0;
+    background: var(--bg); padding: 1.5rem;
+    border-bottom: 1px solid var(--border-light);
+    gap: 1rem;
+    transition: background var(--transition-theme);
+  }
+  section { padding: 4rem 1.5rem; }
+  .hero { padding: 7rem 1.5rem 3rem; }
+  .contact-layout { grid-template-columns: 1fr; }
+  .store-buttons { flex-direction: column; align-items: center; }
+  .theme-toggle { top: 1rem; right: 4rem; }
+}
+</style>
+</head>
+<body data-theme="pink">
+
+<!-- THEME TOGGLE -->
+<div class="theme-toggle" onclick="toggleTheme()" title="테마 전환">
+  <div class="knob"></div>
+</div>
+
+<!-- NAV -->
+<nav id="mainNav">
+  <a href="#" class="nav-logo">MÜREN<em>film</em></a>
+  <div class="nav-links" id="navLinks">
+    <a href="#products">Products</a>
+    <a href="#story">Story</a>
+    <a href="#purchase">Shop</a>
+    <a href="#contact" class="nav-cta-link">Contact</a>
+  </div>
+  <div class="hamburger" onclick="document.getElementById('navLinks').classList.toggle('open')">
+    <span></span><span></span><span></span>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-decorative-line"></div>
+  <div class="hero-brand">MÜREN</div>
+  <div class="hero-sub">f i l m</div>
+
+  <div class="hero-card-wrapper">
+    <div class="sd-card-visual">
+      <div class="lock"></div>
+      <div class="lock-label">LOCK</div>
+      <div class="notch"></div>
+      <div class="sd-card-inner">
+        <div class="sd-brand-name">MÜREN</div>
+        <div class="sd-brand-sub">f i l m</div>
+        <div class="sd-capacity">4<span class="sd-capacity-unit">GB</span></div>
+        <div class="sd-type-label">SD Memory Card</div>
+        <div class="sd-tags">
+          <span class="sd-tag">SDHC</span>
+          <span class="sd-tag">C10</span>
+        </div>
+        <div class="sd-dots">
+          <span></span><span></span><span></span>
+        </div>
+      </div>
+      <div class="sd-slogan">Capture Your Moment</div>
+    </div>
+  </div>
+
+  <p class="hero-tagline">
+    매 순간을 기억하는 방식,<br>
+    그 시작은 하나의 카드로부터.
+  </p>
+  <div class="hero-cta">
+    <a href="#products" class="btn-primary">제품 보기</a>
+    <a href="#purchase" class="btn-secondary">구매하기</a>
+  </div>
+</section>
+
+<!-- PRODUCTS -->
+<section class="products" id="products">
+  <div class="products-header">
+    <div class="section-label">Products</div>
+    <h2 class="section-title">Our Collection</h2>
+    <div class="divider"></div>
+    <p class="section-desc">필름 감성을 담은 메모리 카드. 감도와 순간을 기록하세요.</p>
+  </div>
+  <div class="product-grid">
+    <div class="product-card reveal">
+      <div class="product-emoji">🎞️</div>
+      <h3>Classic 4GB</h3>
+      <p>가볍게 시작하는 필름 감성. 일상의 순간을 담기에 충분한 용량과 아날로그 무드의 디자인.</p>
+      <div class="product-specs">
+        <span class="spec-tag">SDHC</span>
+        <span class="spec-tag">Class 10</span>
+        <span class="spec-tag">4GB</span>
+      </div>
+    </div>
+    <div class="product-card reveal">
+      <div class="product-emoji">📷</div>
+      <h3>Standard 8GB</h3>
+      <p>여행과 출사의 동반자. 넉넉한 용량으로 하루를 통째로 기록하세요.</p>
+      <div class="product-specs">
+        <span class="spec-tag">SDHC</span>
+        <span class="spec-tag">Class 10</span>
+        <span class="spec-tag">8GB</span>
+      </div>
+    </div>
+    <div class="product-card reveal">
+      <div class="product-emoji">✨</div>
+      <h3>Premium 16GB</h3>
+      <p>더 많은 순간, 더 깊은 기록. 고해상도 촬영과 연속 버스트에 최적화된 프리미엄 라인.</p>
+      <div class="product-specs">
+        <span class="spec-tag">SDHC</span>
+        <span class="spec-tag">UHS-I</span>
+        <span class="spec-tag">16GB</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- STORY -->
+<section class="story" id="story">
+  <div class="story-content">
+    <div class="section-label">Our Story</div>
+    <h2 class="section-title">왜 MÜREN인가</h2>
+    <div class="divider"></div>
+    <blockquote class="story-quote reveal">
+      "디지털 시대에도 기억은<br>촉감을 가질 수 있다고 믿습니다."
+    </blockquote>
+    <p class="story-body reveal">
+      MÜREN film은 필름 카메라 세대의 감성을 디지털 메모리에 담는 브랜드입니다.
+      소중한 순간을 저장하는 SD카드가 그저 부품이 아니라,
+      당신의 기억에 어울리는 하나의 오브제가 되길 바랍니다.
+      아날로그의 온기와 디지털의 신뢰를 함께.
+    </p>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section class="features">
+  <div style="text-align: center;">
+    <div class="section-label">Details</div>
+    <h2 class="section-title">무엇이 다른가</h2>
+    <div class="divider"></div>
+  </div>
+  <div class="feature-grid">
+    <div class="feature-item reveal">
+      <div class="feature-icon">🎨</div>
+      <h3>디자인</h3>
+      <p>핑크와 블랙, 두 가지 컬러웨이. 카메라 옆에 놓아도 아름다운 SD카드.</p>
+    </div>
+    <div class="feature-item reveal">
+      <div class="feature-icon">🛡️</div>
+      <h3>신뢰성</h3>
+      <p>산업용 등급 NAND 기반. 소중한 사진을 안전하게 보관합니다.</p>
+    </div>
+    <div class="feature-item reveal">
+      <div class="feature-icon">⚡</div>
+      <h3>호환성</h3>
+      <p>디지털 카메라, 필름 스캐너, 포토 프린터 등 모든 장비와 완벽 호환.</p>
+    </div>
+    <div class="feature-item reveal">
+      <div class="feature-icon">🎁</div>
+      <h3>패키징</h3>
+      <p>선물하고 싶은 패키지. 소장 가치가 있는 감성 박스 디자인.</p>
+    </div>
+  </div>
+</section>
+
+<!-- PURCHASE -->
+<section class="purchase" id="purchase">
+  <div class="section-label">Purchase</div>
+  <h2 class="section-title">구매하기</h2>
+  <div class="divider"></div>
+  <p class="section-desc">공식 스토어에서 만나보세요.</p>
+  <div class="store-buttons">
+    <a href="#" class="store-btn store-naver" target="_blank">
+      <svg width="18" height="18" viewBox="0 0 20 20" fill="none"><rect width="20" height="20" rx="4" fill="#fff"/><path d="M11.5 10.6L8.3 5.8H5.8v8.4h2.7v-4.8l3.2 4.8h2.5V5.8h-2.7v4.8z" fill="#03c75a"/></svg>
+      네이버 스토어
+    </a>
+    <div class="store-btn store-coupang">
+      🚀 쿠팡 <span class="badge">&nbsp;coming soon</span>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section class="contact" id="contact">
+  <div style="text-align: center;">
+    <div class="section-label">Contact</div>
+    <h2 class="section-title">문의하기</h2>
+    <div class="divider"></div>
+    <p class="section-desc" style="margin: 0 auto 0;">대량 주문, 협업, 궁금한 점 무엇이든.</p>
+  </div>
+  <div class="contact-layout">
+    <div class="contact-info reveal">
+      <h3>MÜREN film</h3>
+      <p>감성 메모리 카드 브랜드.<br>순간을 기억하는 가장 아름다운 방법.</p>
+      <div class="contact-detail">
+        <div class="icon">✉</div>
+        <span>contact@murenfilm.kr</span>
+      </div>
+      <div class="contact-detail">
+        <div class="icon">☎</div>
+        <span>010-0000-0000</span>
+      </div>
+      <div class="contact-detail">
+        <div class="icon">⏰</div>
+        <span>평일 10:00 – 18:00</span>
+      </div>
+    </div>
+    <form class="contact-form reveal" onsubmit="handleSubmit(event)">
+      <input type="text" placeholder="이름" required>
+      <input type="email" placeholder="이메일" required>
+      <input type="text" placeholder="제목">
+      <textarea placeholder="문의 내용을 입력해주세요"></textarea>
+      <button type="submit">보내기 →</button>
+    </form>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">MÜREN</div>
+  <div class="footer-slogan">Capture Your Moment</div>
+  <p>© 2026 MÜREN film. All rights reserved.</p>
+</footer>
+
+<script>
+// Theme toggle
+function toggleTheme() {
+  const body = document.body;
+  const current = body.getAttribute('data-theme');
+  body.setAttribute('data-theme', current === 'pink' ? 'black' : 'pink');
+}
+
+// Scroll reveal
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.classList.add('visible');
+      observer.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.15 });
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+// Nav scroll
+window.addEventListener('scroll', () => {
+  document.getElementById('mainNav').classList.toggle('scrolled', window.scrollY > 50);
+});
+
+// Form
+function handleSubmit(e) {
+  e.preventDefault();
+  const btn = e.target.querySelector('button');
+  btn.textContent = '✓ 접수 완료';
+  setTimeout(() => { btn.textContent = '보내기 →'; e.target.reset(); }, 2000);
+}
+</script>
+</body>
+</html>
